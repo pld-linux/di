@@ -4,16 +4,15 @@ Name:		di
 Version:	2.3
 Release:	1
 License:	GPL
-Group:		Utilities/System
-Group(pl):	Narzêdzia/System
-Source0:	%{name}-distr.001
-Source1:	%{name}-distr.002
-Source2:	%{name}-distr.003
+Group:		Applications/System
+Group(de):	Applikationen/System
+Group(pl):	Aplikacje/System
+Source0:	%{name}-%{name}str.001
+Source1:	%{name}-%{name}str.002
+Source2:	%{name}-%{name}str.003
 #BuildRequires:	
 #Requires:	
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define	_prefix	/usr
 
 %description
 'di' is a disk information utility, displaying everything (and more)
@@ -49,7 +48,7 @@ fi
 %build
 cd $RPM_BUILD_DIR/%name-%version
 ./configure --prefix=%{_prefix}
-%{__make} RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+%{__make} RPM_OPT_FLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -58,7 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 %{__make} PREFIX=$RPM_BUILD_ROOT%{_prefix} MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1 install
 
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/* MANIFEST README
+gzip -9nf MANIFEST README
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,4 +66,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.gz MANIFEST.gz
 %attr(755,root,root) %{_bindir}/di
-%attr(644,root,root) %{_mandir}/man1/di.*
+%{_mandir}/man1/di.*

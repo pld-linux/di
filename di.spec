@@ -34,13 +34,11 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
 	MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1
 
-gzip -9nf MANIFEST README
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.gz MANIFEST.gz
+%doc README MANIFEST
 %attr(755,root,root) %{_bindir}/di
 %{_mandir}/man1/di.*

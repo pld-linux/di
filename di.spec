@@ -1,11 +1,11 @@
-Summary:	Disk Info
-Summary(pl):	Disk Info
+Summary:	Disk Info - disk information utility
+Summary(pl):	Disk Info - informacje o dyskach 
 Name:		di
 Version:	3.11
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.gentoo.com/%{name}/%{name}-%{version}.tar.gz
+Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
 # Source0-md5:	13f5c38bde30091ae53fb8483426ce34
 URL:		http://www.gentoo.com/di/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -25,8 +25,10 @@ w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
 %setup -q
 
 %build
-./configure --prefix=%{_prefix}
-%{__make} RPM_OPT_FLAGS="%{rpmcflags}"
+./configure \
+	--prefix=%{_prefix}
+%{__make} \
+	RPM_OPT_FLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT

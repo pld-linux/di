@@ -49,14 +49,14 @@ fi
 %build
 cd $RPM_BUILD_DIR/%name-%version
 ./configure --prefix=%{_prefix}
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+%{__make} RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 cd $RPM_BUILD_DIR/%name-%version
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
-make PREFIX=$RPM_BUILD_ROOT%{_prefix} MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1 install
+%{__make} PREFIX=$RPM_BUILD_ROOT%{_prefix} MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1 install
 
 gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/* MANIFEST README
 

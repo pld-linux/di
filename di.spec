@@ -1,4 +1,4 @@
-Summary:	Disk Info 
+Summary:	Disk Info
 Summary(pl):	Disk Info
 Name:		di
 Version:	2.3
@@ -20,7 +20,7 @@ It is designed to be portable across many platforms.
 w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
 
 %prep
-%setup -q 
+%setup -q
 
 %build
 ./configure --prefix=%{_prefix}

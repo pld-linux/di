@@ -19,16 +19,22 @@ It is designed to be portable across many platforms.
 
 %description -l pl
 'di' jest narzêdziem udostêpniaj±cym informacje o dyskach istniej±cych
-w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
+w systemie - podobnie jak 'df', lecz w bardziej przystêpnej formie. Ma
+mo¿liwo¶æ wy¶wietlania wykorzystania dysku w dowolnie wybranym
+formacie.
+
+Jest zaprojektowane w sposób przeno¶ny na wiele platform.
 
 %prep
 %setup -q
 
 %build
-./configure \
-	--prefix=%{_prefix}
-%{__make} \
-	RPM_OPT_FLAGS="%{rpmcflags}"
+./Configure -ds -e \
+	-Dprefix=%{prefix} \
+	-Dcc="%{__cc}" \
+	-Doptimize="%{rpmcflags}"
+
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT

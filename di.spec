@@ -7,11 +7,7 @@ License:	GPL
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
-Source0:	%{name}-%{name}str.001
-Source1:	%{name}-%{name}str.002
-Source2:	%{name}-%{name}str.003
-#BuildRequires:	
-#Requires:	
+Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -26,33 +22,16 @@ It is designed to be portable across many platforms.
 w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
 
 %prep
-rm -fr $RPM_BUILD_DIR/%name-%version 
-install -d $RPM_BUILD_DIR/%name-%version
-STATUS=$?
-if [ $STATUS -ne 0 ]; then
-    exit STATUS
-fi    
-cd $RPM_BUILD_DIR/%name-%version
-STATUS=$?
-if [ $STATUS -ne 0 ]; then
-    exit STATUS
-fi    
-sh %{SOURCE0}
-sh %{SOURCE1}
-sh %{SOURCE2}
-STATUS=$?
-if [ $STATUS -ne 0 ]; then
-    exit STATUS
-fi    
+%setup -q 
 
 %build
-cd $RPM_BUILD_DIR/%name-%version
+#cd $RPM_BUILD_DIR/%name-%version
 ./configure --prefix=%{_prefix}
 %{__make} RPM_OPT_FLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-cd $RPM_BUILD_DIR/%name-%version
+#cd $RPM_BUILD_DIR/%name-%version
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 %{__make} PREFIX=$RPM_BUILD_ROOT%{_prefix} MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1 install

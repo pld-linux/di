@@ -1,12 +1,12 @@
 Summary:	Disk Info
 Summary(pl):	Disk Info
 Name:		di
-Version:	3.9
+Version:	3.10
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.gentoo.com/%{name}/%{name}-%{version}.tar.gz
-# Source0-md5:	59c840955175ffaf051417c5d0c702d3
+# Source0-md5:	25f92d2d2b4478178541cfaa5b5fc72b
 URL:		http://www.gentoo.com/di/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 

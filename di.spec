@@ -6,9 +6,9 @@ Release:	1
 License:	GPL
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
-Source0:	%name-distr.001
-Source1:	%name-distr.002
-Source2:	%name-distr.003
+Source0:	%{name}-distr.001
+Source1:	%{name}-distr.002
+Source2:	%{name}-distr.003
 #BuildRequires:	
 #Requires:	
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)

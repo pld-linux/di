@@ -11,7 +11,7 @@ Source1:	%name-distr.002
 Source2:	%name-distr.003
 #BuildRequires:	
 #Requires:	
-Buildroot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define	_prefix	/usr
 
@@ -25,7 +25,6 @@ It is designed to be portable across many platforms.
 %description -l pl
 'di' jest narzêdziem udostêpniaj±cym informacje o dyskach istniej±cych 
 w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
-
 
 %prep
 rm -fr $RPM_BUILD_DIR/%name-%version 

@@ -5,7 +5,9 @@ Version:	3.9
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	%{name}-%{version}.tar.gz
+Source0:	http://www.gentoo.com/%{name}/%{name}-%{version}.tar.gz
+# Source0-md5:	59c840955175ffaf051417c5d0c702d3
+URL:		http://www.gentoo.com/di/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description

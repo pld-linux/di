@@ -3,9 +3,9 @@ Summary(pl):	Disk Info
 Name:		di
 Version:	2.3
 Release:	1
-Copyright:	GPL
-Group:		System Tools
-Group(pl):	Na¿êdzia systemowe
+License:	GPL
+Group:		Utilities/System
+Group(pl):	Narzêdzia/System
 Source0:	%name-distr.001
 Source1:	%name-distr.002
 Source2:	%name-distr.003
@@ -16,14 +16,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define	_prefix	/usr
 
 %description
-'di' is a disk information utility, displaying everything (and more) that 
-your 'df' command does. It features the ability to display your disk usage 
-in whatever format you desire/prefer/are used to. 
+'di' is a disk information utility, displaying everything (and more)
+that your 'df' command does. It features the ability to display your
+disk usage in whatever format you desire/prefer/are used to.
 
 It is designed to be portable across many platforms.
 
 %description -l pl
-'di' jest narzêdziem udostêpniaj±cym informacje o dyskach istniej±cych 
+'di' jest narzêdziem udostêpniaj±cym informacje o dyskach istniej±cych
 w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
 
 %prep
@@ -52,6 +52,7 @@ cd $RPM_BUILD_DIR/%name-%version
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd $RPM_BUILD_DIR/%name-%version
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}

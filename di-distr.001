@@ -1,0 +1,1940 @@
+#! /bin/sh
+# This is a shell archive.  Remove anything before this line, then unpack
+# it by saving it into a file and typing "sh file".  To overwrite existing
+# files, type "sh file -c".  You can also feed this as standard input via
+# unshar, or by typing "sh <file", e.g..  If this archive is complete, you
+# will see the following message at the end:
+#		"End of archive 1 (of 3)."
+# Contents:  MANIFEST MANIFEST.shar Makefile.SH README config.win95
+#   config_h.SH configure di.1 getopt.c hints hints/aix.sh
+#   hints/beos.sh hints/dec_osf.sh hints/dynix.sh hints/dynixptx.sh
+#   hints/freebsd.sh hints/hpux.sh hints/irix.sh hints/linux.sh
+#   hints/openbsd.sh hints/solaris.sh hints/unicos.sh win95.mak
+# Wrapped by root@seer on Thu Feb 24 10:15:51 2000
+PATH=/bin:/usr/bin:/usr/ucb ; export PATH
+if test -f 'MANIFEST' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'MANIFEST'\"
+else
+echo shar: Extracting \"'MANIFEST'\" \(470 characters\)
+sed "s/^X//" >'MANIFEST' <<'END_OF_FILE'
+Xdi.1                         manual page
+Xdi.c                         main program
+Xgetopt.c                     getopt() routine
+Xconfig.win95                 config.h for win95
+XREADME                       Read this
+Xwin95.mak                    pre-built Makefile for win95
+XConfigure                    Portability tool
+Xconfigure                    GNU configure-like wrapper
+XMakefile.SH                  Produces Makefile
+Xconfig_h.SH                  Produces config.h
+END_OF_FILE
+if test 470 -ne `wc -c <'MANIFEST'`; then
+    echo shar: \"'MANIFEST'\" unpacked with wrong size!
+fi
+# end of 'MANIFEST'
+fi
+if test -f 'MANIFEST.shar' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'MANIFEST.shar'\"
+else
+echo shar: Extracting \"'MANIFEST.shar'\" \(1076 characters\)
+sed "s/^X//" >'MANIFEST.shar' <<'END_OF_FILE'
+X   File Name		Archive #	Description
+X-----------------------------------------------------------
+X Configure                  3	Configuration script
+X MANIFEST                   1	MANIFEST
+X MANIFEST.shar              1	This shipping list
+X Makefile.SH                1	Produces Makefile
+X README                     1	Read This
+X config.win95               1	config.h for win95
+X config_h.SH                1	Produces config.h
+X configure                  1	gnu-like front-end for Configure
+X di.1                       1	di Manual Page
+X di.c                       2	di source
+X getopt.c                   1	getopt source (from Cnews)
+X hints                      1
+X hints/aix.sh               1
+X hints/beos.sh              1
+X hints/dec_osf.sh           1
+X hints/dynix.sh             1
+X hints/dynixptx.sh          1
+X hints/freebsd.sh           1
+X hints/hpux.sh              1
+X hints/irix.sh              1
+X hints/linux.sh             1
+X hints/openbsd.sh           1
+X hints/solaris.sh           1
+X hints/unicos.sh            1
+X win95.mak                  1	window95 makefile
+END_OF_FILE
+if test 1076 -ne `wc -c <'MANIFEST.shar'`; then
+    echo shar: \"'MANIFEST.shar'\" unpacked with wrong size!
+fi
+# end of 'MANIFEST.shar'
+fi
+if test -f 'Makefile.SH' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'Makefile.SH'\"
+else
+echo shar: Extracting \"'Makefile.SH'\" \(5386 characters\)
+sed "s/^X//" >'Makefile.SH' <<'END_OF_FILE'
+Xcase $CONFIG in
+X'')
+X	if test -f config.sh; then TOP=.;
+X	elif test -f ../config.sh; then TOP=..;
+X	elif test -f ../../config.sh; then TOP=../..;
+X	elif test -f ../../../config.sh; then TOP=../../..;
+X	elif test -f ../../../../config.sh; then TOP=../../../..;
+X	else
+X		echo "Can't find config.sh."; exit 1
+X	fi
+X	. $TOP/config.sh
+X	;;
+Xesac
+X: This forces SH files to create target in same directory as SH file.
+X: This is so that make depend always knows where to find SH derivatives.
+Xcase "$0" in
+X*/*) cd `expr X$0 : 'X\(.*\)/'` ;;
+Xesac
+Xecho "Extracting Makefile (with variable substitutions)"
+X$spitshell >Makefile <<!GROK!THIS!
+X#
+X#  di makefile
+X#
+X#  Copyright 1995-1999 Brad Lanam
+X#
+X#  $Id$
+X#  $Source$
+X#  @(#)Makefile	1.25
+X#
+X#
+X
+XSHELL = $sh
+XCC = $cc
+XLD = $ld
+X$make_set_make
+XOBJ_EXT = $_o
+XEXE_EXT = $_exe
+X
+X#
+X# additional flags/libraries
+X#
+XCFLAGS = -DPROG=\\"\$(PROG)\\" -DMPROG=\\"\$(MPROG)\\" $ccflags $optimize
+XLDFLAGS = $ldflags
+XLIBS = $libs
+X
+X#
+X# installation options
+X#
+XPREFIX = $prefix
+XINSTDIR = \$(PREFIX)/bin
+XPROG = $di_prog
+XMPROG = mi
+XTARGET = \$(INSTDIR)/\$(PROG)
+XMTARGET = \$(INSTDIR)/\$(MPROG)
+X
+X# if you need permissions other than the default,
+X# edit these, and do a "make installperm".
+XUSER = root
+XGROUP = bin
+X#INSTPERM = 111   # change USER to bin also...
+XINSTPERM = 4111   # install suid if your system has a mount table only root
+X#                   can read.  For SysV.4 and Solaris, the mount command may
+X#                   reset the permissions of /etc/mnttab.
+X
+X#
+X# simple man page installation
+X#
+XMANDIR = $mansrcexp
+XMANTARGET = "\$(PROG).$manext"
+XMANPERM = 644
+X
+X#
+X# common programs
+X#
+XLN = $ln
+XRM = $rm
+XCP = $cp
+XMV = $mv
+XTEST = $test
+XCHOWN = $chown
+XCHGRP = $chgrp
+XCHMOD = $chmod
+XTOUCH = $touch
+X
+X###
+X
+XOTHEROBJ = $di_otherobj
+X
+X###
+X
+Xall:	\$(PROG)\$(EXE_EXT)
+X
+X# This was tested using vc++ 5.0.
+Xwindows:
+X	\$(MAKE) CC=cl LD=cl EXE_EXT=".exe" OBJ_EXT=".obj" \\
+X		CFLAGS="\$(CFLAGS) -nologo -O2 \\
+X		OTHEROBJ="getopt.obj" \\
+X		-DI_STDLIB -DI_SYS_TYPES -DI_TIME -DI_WINDOWS \\
+X		-DI_GETDISKFREESPACE \\
+X		-DDEFAULT_FORMAT=\\\\\\"sMbuvpT\\\\\\"" \\
+X		LDFLAGS="-nologo -O2" \$(PROG).exe
+X
+X# This was tested using Cygnus gcc b19
+Xwindows-gcc:
+X	\$(MAKE) CC=gcc LD=gcc EXE_EXT=".exe" OBJ_EXT=".o" \\
+X		CFLAGS="\$(CFLAGS) -g -O2 \\
+X		OTHEROBJ="getopt.o" \\
+X		-DI_STDLIB -DI_SYS_TYPES -DI_TIME -DI_WINDOWS \\
+X		-DI_GETDISKFREESPACE \\
+X		-DDEFAULT_FORMAT=\\\\\\"sMbuvpT\\\\\\"" \\
+X		LDFLAGS="-g -O2" \$(PROG).exe
+X
+X####################
+X
+Xall:	\$(PROG)\$(EXE_EXT)
+X	-\$(LN) -f \$(PROG)\$(EXE_EXT) \$(MPROG)\$(EXE_EXT)
+X
+Xclean:
+X	-\$(RM) -rf \$(PROG)\$(EXE_EXT) \$(MPROG)\$(EXE_EXT) *.o *.obj \\
+X		UU >/dev/null 2>&1
+X
+Xdistclean:
+X	-\$(RM) -rf config.h config.sh Makefile \$(PROG)\$(EXE_EXT) \\
+X		\$(MPROG)\$(EXE_EXT) di\$(EXE_EXT) diskinfo\$(EXE_EXT) \\
+X		*.o *.obj UU Wanted Obsolete >/dev/null 2>&1
+X
+Xrealclean:
+X	\$(MAKE) distclean
+X
+Xinstall:	install-prog install-man
+X
+Xinstall-prog:
+X	-\$(TEST) -f \$(TARGET) && \$(MV) -f \$(TARGET) \$(TARGET).old
+X	\$(CP) -f \$(PROG) \$(TARGET)
+X	-\$(LN) -f \$(TARGET) \$(MTARGET)
+X
+Xinstallperms:
+X	\$(CHOWN) \$(USER) \$(TARGET)
+X	\$(CHGRP) \$(GROUP) \$(TARGET)
+X	\$(CHMOD) \$(INSTPERM) \$(TARGET)
+X
+Xinstall-man:
+X	\$(CP) -f di.1 \$(MANDIR)/\$(MANTARGET)
+X	\$(CHMOD) \$(MANPERM) \$(MANDIR)/\$(MANTARGET)
+X
+X###
+X
+Xtar:		MANIFEST README di.1 di.c getopt.c Makefile.SH configure \\
+X		Configure config_h.SH hints \\
+X		config.win95 win95.mak
+X	\$(CP) hints.base/*.sh hints
+X	\$(SHELL) mktar.sh \$?
+X
+Xshar:	di.shar
+X
+XMANIFEST.shar:
+X	echo "" > MANIFEST.shar
+X	echo "" >> MANIFEST.shar
+X	echo "README		1	Read This" >> MANIFEST.shar
+X	echo "MANIFEST		1	MANIFEST" >> MANIFEST.shar
+X	echo "di.1		1	di Manual Page" >> MANIFEST.shar
+X	echo "di.c		1	di source" >> MANIFEST.shar
+X	echo "getopt.c		1	getopt source (from Cnews)" >> MANIFEST.shar
+X	echo "Configure		1	Configuration script" >> MANIFEST.shar
+X	echo "configure		1	gnu-like front-end for Configure" >> MANIFEST.shar
+X	echo "config_h.SH	1	Produces config.h" >> MANIFEST.shar
+X	echo "config.win95	1	config.h for win95" >> MANIFEST.shar
+X	echo "Makefile.SH	1	Produces Makefile" >> MANIFEST.shar
+X	echo "win95.mak		1	window95 makefile" >> MANIFEST.shar
+X	echo "hints		1" >> MANIFEST.shar
+X	echo "hints/aix.sh	1" >> MANIFEST.shar
+X	echo "hints/beos.sh	1" >> MANIFEST.shar
+X	echo "hints/dec_osf.sh	1" >> MANIFEST.shar
+X	echo "hints/freebsd.sh	1" >> MANIFEST.shar
+X	echo "hints/hpux.sh	1" >> MANIFEST.shar
+X	echo "hints/linux.sh	1" >> MANIFEST.shar
+X	echo "hints/dynix.sh	1" >> MANIFEST.shar
+X	echo "hints/dynixptx.sh	1" >> MANIFEST.shar
+X	echo "hints/irix.sh	1" >> MANIFEST.shar
+X	echo "hints/openbsd.sh	1" >> MANIFEST.shar
+X	echo "hints/solaris.sh	1" >> MANIFEST.shar
+X	echo "hints/unicos.sh	1" >> MANIFEST.shar
+X
+Xdi.shar:	Configure configure config.win95 \\
+X		config_h.SH di.1 di.c getopt.c Makefile.SH \\
+X		README win95.mak MANIFEST hints
+X	\$(CP) hints.base/*.sh hints
+X	-\$(RM) -f di.shar Part??
+X	\$(MAKE) MANIFEST.shar
+X	makekit -i MANIFEST.shar -o MANIFEST.shar -s120k
+X	-@\$(RM) -f *.BAK MANIFEST.shar > /dev/null 2>&1
+X	\$(SHELL) setname.sh
+X	\$(TOUCH) di.shar
+X
+X###
+X
+X\$(PROG)\$(EXE_EXT):	di\$(OBJ_EXT) \$(OTHEROBJ)
+X	\$(CC) \$(CFLAGS) \$(LDFLAGS) -o \$(PROG)\$(EXE_EXT) di\$(OBJ_EXT) \\
+X		\$(OTHEROBJ) \$(LIBS)
+X
+X###
+X
+Xdi\$(OBJ_EXT):	di.c config.h
+X	\$(CC) -c \$(CFLAGS) di.c
+X
+Xgetopt\$(OBJ_EXT):	getopt.c
+X	\$(CC) -c \$(CFLAGS) getopt.c
+X
+X
+X!GROK!THIS!
+X
+Xchmod 755 Makefile
+X$eunicefix Makefile
+END_OF_FILE
+if test 5386 -ne `wc -c <'Makefile.SH'`; then
+    echo shar: \"'Makefile.SH'\" unpacked with wrong size!
+fi
+chmod +x 'Makefile.SH'
+# end of 'Makefile.SH'
+fi
+if test -f 'README' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'README'\"
+else
+echo shar: Extracting \"'README'\" \(9353 characters\)
+sed "s/^X//" >'README' <<'END_OF_FILE'
+Xdi - disk information utility (version 2.3).
+X
+XDESCRIPTION
+X
+X    'di' is a disk information utility, displaying everything
+X    (and more) that your 'df' command does. It features the
+X    ability to display your disk usage in whatever format you
+X    desire/prefer/are used to. It is designed to be portable
+X    across many platforms.
+X
+XINSTALLATION
+X
+X    The installation process has been completely revamped
+X    beginning with version 2.0.  di now uses dist 3.0PL70 to
+X    do its configuration.
+X
+X    First, run Configure:
+X
+X      ./Configure -d -s -e          # non-interactive
+X      ./Configure -d -s -e -Dcc=gcc # non-interactive, and you want to use gcc
+X      ./Configure                   # interactive
+X
+X    Then, do your make:
+X
+X        make
+X
+X    And install:
+X
+X    AIX versions prior to 4.3 had a 'di' command.  di is installed
+X    as 'diskinfo' instead for these AIX versions.
+X
+X        make install
+X
+X    Some systems (Sys V variants) only allow root to read the
+X    mount table.  If this is the case, change the INSTPERM macro
+X    in the Makefile should be set to 4111, and the USER macro to root.
+X    In SysV.4 and Solaris, the mount command would reset the
+X    permissions to be root readable only (fixed in Solaris 7).
+X
+X    If this is needed on your system, do:
+X
+X        make installperm
+X
+X    To install the manual pages:
+X
+X        make install.man
+X
+X    Windows installation:
+X
+X        Cygnus gcc: make -f win95.mak windows-gcc
+X        MS VC++:    nmake -f win95.mak windows
+X
+XPORTING
+X
+X    di 2.3 has been tested on the following platforms:
+X        AIX 4.3.2
+X        BSD/OS 4.0.1 (gcc 2.7.2.1)
+X        FreeBSD 2.1.5 (gcc 2.6.3), 2.2.6 (gcc 2.7.2.1), 2.2.7 (gcc 2.7.2.1),
+X                3.3 (gcc 2.7.2.3), 3.3 (gcc 2.8.1)
+X        Solaris 7 (cc 5.0, gcc 2.8.1)
+X        Solaris 8 (cc 5.0, gcc 2.8.1)
+X        BeOS 4.5.2 intel (g++ 2.9-beos-980929)
+X        Linux 2.0.35 (gcc 2.7.2.3), 2.2.12 (gcc 2.91.66)
+X        Windows NTsp5 (vc 6.0)
+X
+X    di 2.2 has been tested on the following platforms:
+X
+X        BSD/OS 4.0.1 (gcc 2.7.2.1)
+X        FreeBSD 2.1.5 (gcc 2.6.3), 2.2.6 (gcc 2.7.2.1), 2.2.7 (gcc 2.7.2.1),
+X                3.2 (gcc 2.95.1), 3.3 (gcc 2.7.2.3), 3.3 (gcc 2.8.1)
+X        Linux 2.0.35 (gcc 2.7.2.3)
+X        Linux 2.0.36 (gcc 2.7.2.3)
+X        Solaris 7 (SC3.0.1), 7 (gcc 2.95.1)
+X        Compaq Tru64 (Digital Unix, OSF/1) 4.0D, 4.0F
+X
+X    di 2.0 has been tested on the following platforms:
+X
+X        AIX 4.1.4.0, 4.3.0.0, 4.3.1.0 (egcs-1.1.1.1)
+X        BSD/OS 2.1 (gcc 1.42)
+X        IRIX 6.2, 6.5
+X        NetBSD 1.3.3
+X        HP/UX B.10.20
+X        UNICOS 10.0.0.3
+X        Windows95 (cygnus gcc B19)
+X
+X    di has been ported to the following systems in the past:
+X
+X        A/UX, AIX, BSDI 1.x & 2.x, Convex, Cray UNICOS 9 & 10,
+X        Cray UNICOS/mk, FreeBSD 1.x and 2.x, HP/UX, Linux,
+X        NetBSD 1.x, Next 3.x, OSF/1, Pyramid, SCO 3.2.2 & 3.2.4,
+X        Sequent Dynix and PT/x, SGI Irix, Solaris, SunOS, Sys V.3,
+X        Sys V.4, Ultrix, Windows, Xenix
+X
+X    Due to the revamped configuration process, some of these systems
+X    may not be properly configured as I don't have access to all of the
+X    platforms to test on.
+X
+XBUGS
+X
+X    Solaris 2.6 has a bug in the kernel and reports the reserved
+X    space incorrectly.  There is a kernel patch available (105572-05?).
+X
+X    Send bug reports along with the output from 'di -A -x 2' and the
+X    output from your standard df command (as verbose as possible) to:
+X
+X        bll@gentoo.com
+X
+X    If the Configure script doesn't set up the 'config.h' file
+X    correctly, please let me know.  E-mail me the incorrect (and
+X    corrected if possible) config.h file, and any other information
+X    as appropriate.  The goal is to be able to run Configure in
+X    non-interactive mode for any system.
+X
+XCHANGES
+X
+X    2.3
+X        Modified hints for solaris to do 64 bit compilation.
+X        Removed extra libc setting for linux.
+X        Added support for BeOS.  This required ansi function headers.
+X    2.2
+X        Hints for dec_osf added.
+X        Changed HAS_GETMNTINFOFSIZE to be preferred over
+X        HAS_GETMNTINFOBSIZE; modified bsdos hints appropriately.
+X        Look for <sys/fs_types.h> include file.
+X    2.1
+X        Added +DAportable for HP-UX.
+X        Hints for openbsd added.
+X        Made installperm as separate target in makefile.
+X        Modified duplicate checking slightly.
+X        Changed MNT_NOWAIT to MNT_WAIT.  This will work better
+X        on FreeBSD.  Hopefully will work w/nfs mounts.
+X    2.0
+X        Now uses dist 3.0PL70 for configuration.
+X        Duplicate filesystems (automounted) are not displayed.
+X        This probably does not work for Digital's advfs.
+X    1.24
+X        Added Windows w/gcc.
+X        The Solaris 2.6 statvfs() bug has a patch out for it.
+X        Patch #105572-05 (?).
+X    1.23
+X        Improved Windows.
+X    1.22
+X        Added Windows.  Don't know the routines to get the number
+X        of file slots or the file system type (FAT12/16/32).
+X        Changed default to display megabytes.
+X    1.21
+X        Fixed AIX typo.
+X        Linux 2.x
+X    1.20
+X        Added Solaris large file system support.  Note that
+X        ver 2.6 Beta_Update has a bug in the statvfs() routine,
+X        and the non-root available disk space is improperly
+X        reported.
+X    1.19
+X        Added mount time, mount options.  Link di to the mi command.
+X    1.18
+X        Fixed some ignore/include list problems.  Fixed local mount
+X        flag for OSF/1.
+X    1.17
+X        Changed block values from unsigned long to doubles so that we
+X        can display using different block sizes (-d flag).
+X        Added -l flag for local filesystems only.
+X    1.16
+X        Added A/UX  [ blemoine@atheist.tamu.edu (Brett G. Lemoine) ]
+X        Added convex [ "Schilperoort J.W." <J.W.Schilperoort@research.ptt.nl> ]
+X    1.15
+X	Fixed bsdi 1.x and bsdi 2.x.  Fragments weren't supported.
+X	Fixed FreeBSD 1.x and 2.x; same problem.
+X        Changed sco_sl makefile entry.
+X    1.14
+X        Fixed problem with display widths in conjunction with
+X        ignore/include lists.
+X    1.13
+X        changed default length of filesystem type field to 7.
+X        new debug 'all' format.
+X        check for 0 fragment size; replace w/block size if we have it.
+X    1.12
+X        sco nfs 'nothing' fix.
+X        freebsd 2.x; better freebsd filesystem types.
+X    1.11
+X        bsdi
+X    1.10
+X        added freebsd.
+X    1.9
+X        makefile fixes.
+X    1.8
+X        removed mount option junk.
+X        added AIX.
+X    1.7
+X        cleaned up sgi in the makefile.
+X        changed linux to be w/o need_statfs_defs.
+X        solaris cdrom returning all sorts of negative values.
+X        T format option.
+X        mount options.
+X        sunOs filesystem type info.
+X    1.6
+X        ultrix bug fixes.
+X        add dynix to makefile.
+X    1.5
+X        sun had f_bfree instead of f_bavail!
+X        xenix, linux, sco
+X        -w, -W, -B.
+X        fixed width for -f M, -f S.
+X        usage.
+X        Allow other characters in format string.
+X        1.51 (local, pat@rwing)
+X            SunOS *does* support filesystem type info.  Its all in the
+X            mntent structure, but requires a small bit of work (see source).
+X    1.4
+X        -f B
+X        bcopy.
+X        solaris cdrom reports -2 for free blocks.
+X    1.3
+X        Command line specification of filenames.
+X        sort output.
+X        osf/1, ultrix.
+X        -F, -f M, -F S.
+X    1.2
+X        # of inodes can be -1L
+X        return code for getDiskInfo shouldn't be checked.
+X        name of mount point must be maxpathlen.
+X        error conditions.
+X        pyramid.
+X    1.1
+X        initial release
+X
+XACKNOWLEDGEMENTS
+X
+X    And for their comments and/or source and/or
+X    manual pages and/or bug fixes, thanks!
+X
+X        jjb@jagware.bcc.com (J.J.Bailey)
+X        vogelke@c-17igp.wpafb.af.mil (Contr Karl Vogel)
+X            [pyramid]
+X        costales@ICSI.Berkeley.EDU (Bryan Costales)
+X        Mark Neale <mark@edscom.demon.co.uk>
+X        Pat Myrto <pat@rwing.uucp>
+X            [sunOS filesystem type stuff]
+X        henrikar@utctu1.ct.utwente.nl (Henri Karrenbeld)
+X            [sgi]
+X        Peter Bray <Peter.Bray@serg.cse.unsw.edu.au>
+X        gsipe@pyramid.com (George M. Sipe)
+X            [manual page]
+X        Jeffrey Mogul <mogul@pa.dec.com>
+X            [ultrix, osf/1, manual page, new format options]
+X        thomas@idx.kodak.com (Th. Bullinger)
+X            [help usage]
+X        Seth Theriault <seth@connact.com>
+X            [next, tru64]
+X        steve@nshore.org (Stephen J. Walick)
+X            [SCO]
+X        Gerald Rinske <gerald@D012F291.mch.sni.de>
+X            [sgi]
+X        Mike Grupenhoff <kashmir@snare.dorm.umd.edu>
+X            [linux]
+X        R.K.Lloyd@csc.liv.ac.uk
+X            [hpux]
+X        "William Gibbs" <bill@wgc386.MV.COM>
+X            [xenix]
+X        Randy Thompson <randyt@sequent.com>
+X            [sequent]
+X        eriko@risc.austin.ibm.com (O'Shaughnessy Erik)
+X            [aix]
+X        Bill Davidsen <davidsen@tmr.com>
+X            [linux, SCO, etc., new format options]
+X        fredex@fcshome.stoneham.ma.us (fred smith)
+X            [coherent 4.2.05]
+X        bag@clipper.cs.kiev.ua (Andrey Blochintsev)
+X            [bsdi]
+X        ginsbach@spacestar.net (Brian Ginsbach)
+X            [netbsd, irix, unicos]
+X
+X        et. al.
+X
+XCOPYRIGHT
+X
+X    Copyright 1995-1999 Brad Lanam, Walnut Creek, CA, USA
+X    bll@gentoo.com
+X    http://secure.gentoo.com/di/
+X    http://secure.gentoo.com/di/di-2.2.tar.gz
+END_OF_FILE
+if test 9353 -ne `wc -c <'README'`; then
+    echo shar: \"'README'\" unpacked with wrong size!
+fi
+# end of 'README'
+fi
+if test -f 'config.win95' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'config.win95'\"
+else
+echo shar: Extracting \"'config.win95'\" \(383 characters\)
+sed "s/^X//" >'config.win95' <<'END_OF_FILE'
+X/* config.h for win95 */
+X/* $Id$ */
+X
+X#ifndef _config_h_
+X#define _config_h_
+X
+X#define _(args)	args
+X
+X#define I_MALLOC
+X#define I_MEMORY
+X#define I_STDLIB
+X#define I_STRING
+X#define I_SYS_TYPES
+X#define I_SYS_STAT
+X#define I_TIME
+X#define I_WINDOWS
+X
+X#define HAS_GETDISKFREESPACE
+X#define HAS_MEMCPY
+X#define HAS_MEMSET
+X
+X#endif /* _config_h_ */
+END_OF_FILE
+if test 383 -ne `wc -c <'config.win95'`; then
+    echo shar: \"'config.win95'\" unpacked with wrong size!
+fi
+# end of 'config.win95'
+fi
+if test -f 'config_h.SH' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'config_h.SH'\"
+else
+echo shar: Extracting \"'config_h.SH'\" \(10815 characters\)
+sed "s/^X//" >'config_h.SH' <<'END_OF_FILE'
+Xcase $CONFIG in
+X'')
+X	if test -f config.sh; then TOP=.;
+X	elif test -f ../config.sh; then TOP=..;
+X	elif test -f ../../config.sh; then TOP=../..;
+X	elif test -f ../../../config.sh; then TOP=../../..;
+X	elif test -f ../../../../config.sh; then TOP=../../../..;
+X	else
+X		echo "Can't find config.sh."; exit 1
+X	fi
+X	. $TOP/config.sh
+X	;;
+Xesac
+Xcase "$0" in
+X*/*) cd `expr X$0 : 'X\(.*\)/'` ;;
+Xesac
+Xecho "Extracting config.h (with variable substitutions)"
+Xsed <<!GROK!THIS! >config.h -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un-def!#undef!'
+X/*
+X * This file was produced by running the config_h.SH script, which
+X * gets its values from config.sh, which is generally produced by
+X * running Configure.
+X *
+X * Feel free to modify any of this as the need arises.  Note, however,
+X * that running config_h.SH again will wipe out any changes you've made.
+X * For a more permanent change edit config.sh and rerun config_h.SH.
+X *
+X * \$Id$
+X */
+X
+X/*
+X * Package name      : $package
+X * Source directory  : $src
+X * Configuration time: $cf_time
+X * Configured by     : $cf_by
+X * Target system     : $myuname
+X */
+X
+X#ifndef _config_h_
+X#define _config_h_
+X
+X/* HAS_BCOPY:
+X *	This symbol is defined if the bcopy() routine is available to
+X *	copy blocks of memory.
+X */
+X#$d_bcopy HAS_BCOPY	/**/
+X
+X/* HAS_BZERO:
+X *	This symbol is defined if the bzero() routine is available to
+X *	set a memory block to 0.
+X */
+X#$d_bzero HAS_BZERO	/**/
+X
+X/* HAS_MEMCPY:
+X *	This symbol, if defined, indicates that the memcpy routine is available
+X *	to copy blocks of memory.
+X */
+X#$d_memcpy HAS_MEMCPY	/**/
+X
+X/* HAS_MEMSET:
+X *	This symbol, if defined, indicates that the memset routine is available
+X *	to set blocks of memory.
+X */
+X#$d_memset HAS_MEMSET	/**/
+X
+X/* I_LIMITS:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <limits.h> to get definition of symbols like WORD_BIT or
+X *	LONG_MAX, i.e. machine dependant limitations.
+X */
+X#$i_limits I_LIMITS		/**/
+X
+X/* I_MALLOC:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <malloc.h>.
+X */
+X#$i_malloc I_MALLOC		/**/
+X
+X/* I_MEMORY:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <memory.h>.
+X */
+X#$i_memory I_MEMORY		/**/
+X
+X/* I_STDLIB:
+X *	This symbol, if defined, indicates that <stdlib.h> exists and should
+X *	be included.
+X */
+X#$i_stdlib I_STDLIB		/**/
+X
+X/* I_STRING:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <string.h> (USG systems) instead of <strings.h> (BSD systems).
+X */
+X#$i_string I_STRING		/**/
+X
+X/* I_SYS_PARAM:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/param.h>.
+X */
+X#$i_sysparam I_SYS_PARAM		/**/
+X
+X/* I_SYS_STAT:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/stat.h>.
+X */
+X#$i_sysstat	I_SYS_STAT		/**/
+X
+X/* I_SYS_TYPES:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/types.h>.
+X */
+X#$i_systypes	I_SYS_TYPES		/**/
+X
+X/* I_TIME:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <time.h>.
+X */
+X/* I_SYS_TIME:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/time.h>.
+X */
+X#$i_time I_TIME		/**/
+X#$i_systime I_SYS_TIME		/**/
+X
+X/* I_UNISTD:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <unistd.h>.
+X */
+X#$i_unistd I_UNISTD		/**/
+X
+X/* CAN_PROTOTYPE:
+X *	If defined, this macro indicates that the C compiler can handle
+X *	function prototypes.
+X */
+X/* _:
+X *	This macro is used to declare function parameters for folks who want
+X *	to make declarations with prototypes using a different style than
+X *	the above macros.  Use double parentheses.  For example:
+X *
+X *		int main _((int argc, char *argv[]));
+X */
+X#$prototype	CAN_PROTOTYPE	/**/
+X#ifdef CAN_PROTOTYPE
+X#define	_(args) args
+X#else
+X#define	_(args) ()
+X#endif
+X
+X/* VOIDFLAGS:
+X *	This symbol indicates how much support of the void type is given by this
+X *	compiler.  What various bits mean:
+X *
+X *	    1 = supports declaration of void
+X *	    2 = supports arrays of pointers to functions returning void
+X *	    4 = supports comparisons between pointers to void functions and
+X *		    addresses of void functions
+X *	    8 = suports declaration of generic void pointers
+X *
+X *	The package designer should define VOIDUSED to indicate the requirements
+X *	of the package.  This can be done either by #defining VOIDUSED before
+X *	including config.h, or by defining defvoidused in Myinit.U.  If the
+X *	latter approach is taken, only those flags will be tested.  If the
+X *	level of void support necessary is not present, defines void to int.
+X */
+X#ifndef VOIDUSED
+X#define VOIDUSED $defvoidused
+X#endif
+X#define VOIDFLAGS $voidflags
+X#if (VOIDFLAGS & VOIDUSED) != VOIDUSED
+X#define void int		/* is void to be avoided? */
+X#define M_VOID			/* Xenix strikes again */
+X#endif
+X
+X/* HAS_64BIT_STATFS_FLDS:
+X *	This symbol is defined if 64 bit statfs fields are used.
+X */
+X#$d_64bit_statfs_flds HAS_64BIT_STATFS_FLDS	/**/
+X
+X/* HAS_ENDMNTENT:
+X *	This symbol is defined if the endmntent() routine is available.
+X */
+X#$d_endmntent HAS_ENDMNTENT	/**/
+X
+X/* HAS_FS_INFO:
+X *	This symbol is defined if the fs_info() routine is available.
+X */
+X#$d_fs_info HAS_FS_INFO	/**/
+X
+X/* HAS_GETMNT:
+X *	This symbol is defined if the getmnt() routine is available.
+X */
+X#$d_getmnt HAS_GETMNT	/**/
+X
+X/* HAS_GETMNTENT:
+X *	This symbol is defined if the getmntent() routine is available.
+X */
+X#$d_getmntent HAS_GETMNTENT	/**/
+X
+X/* HAS_GETMNTINFO:
+X *	This symbol is defined if the getmntinfo() routine is available.
+X */
+X#$d_getmntinfo HAS_GETMNTINFO	/**/
+X
+X/* HAS_OPTIND:
+X *	This symbol, if defined, indicates that the optind external
+X *	variable is defined.
+X */
+X#$d_optind HAS_OPTIND                /**/
+X#if ! defined (HAS_OPTIND)
+X    extern int optind;
+X    extern char *optarg;
+X#endif
+X
+X/* HAS_MNTCTL:
+X *	This symbol is defined if the mntctl() routine is available.
+X */
+X#$d_mntctl HAS_MNTCTL	/**/
+X
+X/* HAS_MNT_TIME:
+X *	This symbol is defined if the mnt_time or vmt_time is available
+X *	in the mount table.
+X */
+X#$d_mnttime HAS_MNT_TIME     /**/
+X
+X/* HAS_SETMNTENT:
+X *	This symbol is defined if the setmntent() routine is available.
+X */
+X/* HAS_SETMNTENT_ONE_ARG:
+X *	This symbol is defined if the setmntent() has one argument.
+X */
+X#$d_setmntent HAS_SETMNTENT	/**/
+X#$d_setmntent_one_arg HAS_SETMNTENT_ONE_ARG	/**/
+X
+X/* HAS_STATFS_BSD:
+X *	This symbol is defined if statfs() uses the bsd API.
+X */
+X/* HAS_STATFS_SYSV3:
+X *	This symbol is defined if statfs() uses the System V.3 API.
+X */
+X/* Ubsize:
+X *	This symbol may be set if statfs() uses the System V.3 API.
+X *	It should be set to the appropriate system definition
+X *	if the block size is not UBSIZE.
+X */
+X#$d_statfsbsd HAS_STATFS_BSD      /**/
+X#$d_statfssysv3 HAS_STATFS_SYSV3  /**/
+X#define Ubsize  $ubsize /**/
+X
+X/* HAS_STATVFS:
+X *	This symbol is defined if the statvfs() routine is available.
+X */
+X#$d_statvfs HAS_STATVFS	/**/
+X
+X/* HAS_SYSFS:
+X *	This symbol is defined if the sysfs() routine is available.
+X */
+X#$d_sysfs HAS_SYSFS	/**/
+X
+X/* I_FSHELP:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <fshelp.h>.
+X */
+X#$i_fshelp I_FSHELP		/**/
+X
+X/* I_KERNFSINFO:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <kernel/fs_info.h>.
+X */
+X#$i_kernfsinfo I_KERNFSINFO		/**/
+X
+X/* I_MNTENT:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <mntent.h>.
+X */
+X#$i_mntent I_MNTENT		/**/
+X
+X/* I_MNTTAB:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <mnttab.h>.
+X */
+X#$i_mnttab I_MNTTAB		/**/
+X
+X/* I_STOR_DIRECTORY:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <storage/Directory.h>.
+X */
+X#$i_stor_directory I_STOR_DIRECTORY		/**/
+X
+X/* I_STOR_ENTRY:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <storage/Entry.h>.
+X */
+X#$i_stor_entry I_STOR_ENTRY		/**/
+X
+X/* I_STOR_PATH:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <storage/Path.h>.
+X */
+X#$i_stor_path I_STOR_PATH		/**/
+X
+X/* I_SYS_FSTYP:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/fstyp.h>.
+X */
+X#$i_sysfstyp I_SYS_FSTYP		/**/
+X
+X/* I_SYS_FSTYPES:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/fstypes.h>.
+X */
+X/* I_SYS_FS_TYPES:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/fs_types.h>.
+X */
+X#$i_sysfstypes I_SYS_FSTYPES		/**/
+X#$i_sysfs_types I_SYS_FS_TYPES	/**/
+X
+X/* I_SYS_MNTCTL:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/mntctl.h>.
+X */
+X#$i_sysmntctl I_SYS_MNTCTL		/**/
+X
+X/* I_SYS_MNTENT:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/mntent.h>.
+X */
+X#$i_sysmntent I_SYS_MNTENT		/**/
+X
+X/* I_SYS_MNTTAB:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/mnttab.h>.
+X */
+X#$i_sysmnttab I_SYS_MNTTAB		/**/
+X
+X/* I_SYS_MOUNT:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/mount.h>.
+X */
+X/* HAS_GETMNTINFO_FSTYPENAME:
+X *	This symbol is defined if the f_fstypename field is available.
+X */
+X/* HAS_GETMNTINFO_FSIZE:
+X *	This symbol, if defined, indicates that f_fsize should
+X *	be used to compute the filesystem block size.
+X */
+X/* HAS_GETMNTINFO_BSIZE:
+X *	This symbol, if defined, indicates that f_bsize should
+X *	be used to compute the filesystem block size.
+X */
+X#$i_sysmount I_SYS_MOUNT		/**/
+X#$d_getmntinfofstype HAS_GETMNTINFO_FSTYPENAME	/**/
+X#$d_getmntinfofsize HAS_GETMNTINFO_FSIZE /**/
+X#$d_getmntinfobsize HAS_GETMNTINFO_BSIZE /**/
+X
+X/* I_SYS_STATFS:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/statfs.h>.
+X */
+X/* HAS_STATFS_FRSIZE:
+X *	This symbol, if defined, indicates that the f_frsize field is
+X *	part of the statfs structure.
+X */
+X#$i_sysstatfs I_SYS_STATFS		/**/
+X#$d_statfs_frsize HAS_STATFS_FRSIZE	/**/
+X
+X/* I_SYS_STATVFS:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/statvfs.h>.
+X */
+X/* HAS_STATVFS_BASETYPE:
+X *	This symbol, if defined, indicates to the C program that the
+X *	f_basetyep symbol is available in the statvfs structure.
+X */
+X#$i_sysstatvfs I_SYS_STATVFS		/**/
+X#$d_statvfsbasetype HAS_STATVFS_BASETYPE	/**/
+X
+X/* I_SYS_VFS:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/vfs.h>.
+X */
+X#$i_sysvfs I_SYS_VFS		/**/
+X
+X/* I_SYS_VFSTAB:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/vfstab.h>.
+X */
+X#$i_sysvfstab I_SYS_VFSTAB		/**/
+X
+X/* I_SYS_VMOUNT:
+X *	This symbol, if defined, indicates to the C program that it should
+X *	include <sys/vmount.h>.
+X */
+X#$i_sysvmount I_SYS_VMOUNT		/**/
+X
+X#endif
+X!GROK!THIS!
+END_OF_FILE
+if test 10815 -ne `wc -c <'config_h.SH'`; then
+    echo shar: \"'config_h.SH'\" unpacked with wrong size!
+fi
+# end of 'config_h.SH'
+fi
+if test -f 'configure' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'configure'\"
+else
+echo shar: Extracting \"'configure'\" \(2855 characters\)
+sed "s/^X//" >'configure' <<'END_OF_FILE'
+X#! /bin/sh
+X#
+X# $Id$
+X#
+X# GNU configure-like front end to metaconfig's Configure.
+X#
+X# Written by Andy Dougherty <doughera@lafcol.lafayette.edu>
+X# Matthew Green <mrg@mame.mu.oz.au> and Tom Tromey <tromey@cygnus.com>.
+X#
+X# Reformatted and modified for inclusion in the dist-3.0 package by
+X# Raphael Manfredi <Raphael_Manfredi@grenoble.hp.com>.
+X#
+X# This script belongs to the public domain and may be freely redistributed.
+X#
+X# The remaining of this leading shell comment may be removed if you
+X# include this script in your own package.
+X#
+X# $Log$
+X# Revision 3.0.1.2  1997/02/28  16:28:49  ram
+X# patch61: added the srcdir support now that we have src.U
+X# patch61: random cleanup for nicer help message
+X#
+X# Revision 3.0.1.1  1995/07/25  14:16:21  ram
+X# patch56: created
+X#
+X
+X(exit $?0) || exec sh $0 $argv:q
+Xopts=''
+Xverbose=''
+Xcreate='-e'
+Xsrcdir=''
+Xwhile test $# -gt 0; do
+X	case $1 in
+X    --help)
+X		cat <<EOM
+XUsage: configure [options]
+XThis is GNU configure-like front end for a metaconfig-generated Configure.
+XIt emulates the following GNU configure options (must be fully spelled out):
+X
+X    --help               --srcdir=DIRECTORY
+X    --no-create          --silent
+X    --prefix=PREFIX      --verbose
+X    --quiet              --version
+X
+XAnd it honours these environment variables: CC, CFLAGS and DEFS.
+X
+XFurthermore, it ignores the following arguments, when supplied:
+X
+X    --cache-file=FILE    --target=TARGET
+X    --enable-*           --with-*
+X    --host=HOST
+XEOM
+X		exit 0
+X		;;
+X	--no-create)
+X		create='-E'
+X		shift
+X		;;
+X	--prefix=*)
+X		arg=`echo $1 | sed 's/--prefix=/-Dprefix=/'`
+X		opts="$opts $arg"
+X		shift
+X		;;
+X	--prefix)
+X		shift
+X		opts="$opts -Dprefix=$1"
+X		shift
+X		;;
+X	--srcdir=*)
+X		arg=`echo $1 | sed 's/--srcdir=//'`
+X		srcdir=$arg
+X		shift
+X		;;
+X	--srcdir)
+X		shift
+X		srcdir=$1
+X		shift
+X		;;
+X	--quiet|--silent)
+X		exec >/dev/null 2>&1
+X		shift
+X		;;
+X	--verbose)
+X		verbose=true
+X		shift
+X		;;
+X	--version)
+X		copt="$copt -V"
+X		shift
+X		;;
+X	--host=*|--target=*|--cache-file=*|--enable-*|--with-*)
+X		shift
+X		;;
+X	--*)
+X		opt=`echo $1 | sed 's/=.*//'`
+X		echo "This GNU configure front end does not understand $opt"
+X		exit 1
+X		;;
+X	*)
+X		opts="$opts $1"
+X		shift
+X		;;
+X	esac
+Xdone
+X
+Xcase "$CC" in
+X'') ;;
+X*) opts="$opts -Dcc='$CC'";;
+Xesac
+X
+X# Join DEFS and CFLAGS together.
+Xccflags=''
+Xcase "$DEFS" in
+X'') ;;
+X*) ccflags=$DEFS;;
+Xesac
+Xcase "$CFLAGS" in
+X'') ;;
+X*) ccflags="$ccflags $CFLAGS";;
+Xesac
+Xcase "$ccflags" in
+X'') ;;
+X*) opts="$opts -Dccflags='$ccflags'";;
+Xesac
+X
+X# Don't use -s if they want verbose mode
+Xcase "$verbose" in
+X'') copt="$copt -ds";;
+X*) copt="$copt -d";;
+Xesac
+X
+X# Figure out srcdir if not set already
+Xcase "$srcdir" in
+X'') srcdir=`echo $0 | sed -e 's%/[^/][^/]*$%%'`;;
+Xesac
+Xcase "$srcdir" in
+X".") ;;
+X*) opts="$opts -Dsrc=$srcdir";;
+Xesac
+X
+Xset X sh $srcdir/Configure $copt $create $opts
+Xshift
+Xecho "$@"
+Xexec "$@"
+END_OF_FILE
+if test 2855 -ne `wc -c <'configure'`; then
+    echo shar: \"'configure'\" unpacked with wrong size!
+fi
+chmod +x 'configure'
+# end of 'configure'
+fi
+if test -f 'di.1' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'di.1'\"
+else
+echo shar: Extracting \"'di.1'\" \(7676 characters\)
+sed "s/^X//" >'di.1' <<'END_OF_FILE'
+X.\"
+X.\" $Id$
+X.\" $Revision$
+X.\"
+X.\" di.1
+X.\"
+X.\" Copyright 1994-1999 Brad Lanam  Walnut Creek CA USA
+X.\"
+X.\" bll@gentoo.com
+X.\"
+X.\" for di version 2.0
+X.\"
+X.TH di 1 "7 January 1999"
+X.SH Name
+Xdi \- disk information
+X.SH Synopsis
+X.\" di [-Aahlnt] [-d display-size] [-f format] [-i ignore-fstyp-list]
+X.\" [-I include-fstyp-list] [-s sort-type] [-w block-width]
+X.\" [-W inode-width] [-x level] [file [...]]
+X.B di
+X[\fB-Aahlnt\fR] [\fB-d\fR \fIdisplay-size\fR] [\fB-f\fR \fIformat\fR]
+X[\fB-i\fR \fIignore-fstyp-list\fR] [\fB-I\fR \fIinclude-fstyp-list\fR]
+X[\fB-s\fR \fIsort-type\fR]
+X[\fB-w\fR \fIblock-width\fR] [\fB-W\fR \fIinode-width\fR] [\fB-x\fR \fIlevel\fR]
+X[\fIfile\fR [...]]
+X.PP
+X.B mi
+X.SH Description
+X.NXA "di command" "dumpfs command"
+X.NXA "di command" "df command"
+X.NXR "disk" "displaying free space"
+X.I di
+XDisplays usage information on mounted filesystems.  Block values are
+Xreported in megabytes (1024k bytes) by default, but may be changed.
+XIf \fIfile\fR is specified,
+Xthe usage information for the partition on which \fIfile\fR is
+Xlocated is printed.
+X.PP
+XUnless the \-a flag is specified, certain mounted filesystems
+Xwill not normally be displayed.
+X.IP
+XFilesystems that have a total
+Xblock count of 0 will not be displayed.
+X.IP
+XFilesystems that have a mount option of 'ignore' set will not
+Xbe displayed.
+X.IP
+XFilesystems that are automounted, and are duplicates of an
+Xexisting filesystem are not displayed.  (May not work on
+Xall systems).
+X.PP
+X.I mi
+XDisplays the mounted filesystem information.
+X.PP
+XSeveral switches may be specified to
+Xcontrol the output of
+X.I di
+Xand
+X.I mi\fR:
+X.TP
+X.B \-A
+XPrint all fields (used for debugging).  Mount points and special
+Xdevice names are printed at full width.  The \-a flag is set.
+X.TP
+X.B \-a
+XPrints all mounted devices (normally, those with 0 total blocks are not
+Xprinted - e.g. \fB/dev/proc\fR, \fB/dev/fd\fR).
+X.TP
+X.B \-d\ \fIdisplay-size\fR
+XDisplay the blocks in units specified by \fIdisplay-size\fR.  \fIdisplay-size\fR
+Xmay be one of: p \- posix (512 bytes), k \- kilobytes,
+Xm \- megabytes, g - gigabytes, or a specific value to use as the block size.
+XBlock display sizes greater than 1024 bytes are displayed with a precision
+Xof one decimal place after the radix.
+X.TP
+X.B \-f\ \fIformat\fR
+XUse the specified format string \fIformat\fR.  Format strings are
+Xdescribed below.
+X.TP
+X.B \-h
+XPrint out the usage for
+X.I di
+X.TP
+X.B \-i \fIignore-fstype-list\fR
+XIgnore the file system types listed in \fIignore-fstyp-list\fR.
+XThe list is a comma separated list of file system types.  e.g.
+X\-i nfs,rfs
+X.TP
+X.B \-I \fIinclude-fstype-list\fR
+XInclude only the file system types listed in \fIinclude-fstyp-list\fR.
+XThe list is a comma separated list of file system types.  e.g.
+X\-I nfs,rfs
+X.TP
+X.B \-l
+XDisplay only local file systems.  This option is not fully implemented
+Xfor all systems as of version 1.17.
+X.TP
+X.B \-n
+XDo not print a header line above the list of file systems.  Useful when
+Xparsing the output of \fIdi\fR.
+X.TP
+X.B \-s\ \fIsort-type\fR
+XUse \fIsort-type\fR to sort the output.
+XThe output of \fIdi\fR is normally sorted by name.  The output may
+Xbe left unsorted (\fB-s\ n\fR command line switch) i.e. as it appears
+Xin the mount table or may be
+Xsorted by the special device name
+X(\fB-s\ s\fR command line switch).  If the \fB-s \ r\fR command line
+Xswitch is used, the sort order will be reversed.
+XIf \fIfile\fR is specifed on the
+Xcommand line, no sorting is done.
+X.TP
+X.B \-t
+XPrint a totals line below the list of file systems.
+X.TP
+X.B \-w\ \fIblock-width\fR
+XSet the print width for block values.  Default is eight.
+X.TP
+X.B \-W\ \fIinode-width\fR
+XSet the print width for inode values.  Default is seven.
+X.TP
+X.B \-x\ \fIlevel\fR
+XSet the program's debugging level to \fIdebug-level\fR.
+X.SH Format strings
+XThe output of \fIdi\fR may be specified via a format string.  This
+Xstring may be given either via the \fB-f\fR command line switch or by
+Xthe \fBDIFMT\fR environment variable.  The format string may specify the
+Xfollowing columns:
+X.TP
+X.B m
+XPrint the name of the mount point.
+X.TP
+X.B M
+XPrint the name of the mount point, at full length.  The mount point
+Xis formatted to the maximum width necessary for the longest mount
+Xpoint name.
+X.TP
+X.B b
+XPrint the total number of Kbytes on the file system.
+XSee also the \-d option.
+X.TP
+X.B B
+XPrint the total number of Kbytes on the file system
+Xavailable for use by normal
+Xusers.
+XSee also the \-d option.
+X.TP
+X.B u
+XPrint the number of Kbytes in use on the file system
+X(actual number of kbytes used = total - free).
+XSee also the \-d option.
+X.TP
+X.B c
+XPrint the number of Kbytes not available for use by normal users
+X(total - available).
+XSee also the \-d option.
+X.TP
+X.B f
+XPrint the number of free (unused) Kbytes on the file system.
+XSee also the \-d option.
+X.TP
+X.B v
+XPrint the number of Kbytes available for use by normal users.
+XSee also the \-d option.
+X.TP
+X.B p
+XPrint the percentage of Kbytes not available for use by normal users
+X(number of
+Xkbytes not available for use / total disk space).
+XSee also the \-d option.
+X.TP
+X.B 1
+XPrint the percentage of total Kbytes in use
+X(actual number of
+Xkbytes used / total disk space).
+XSee also the \-d option.
+X.TP
+X.B 2
+XPrint the percentage of Kbytes in use, BSD-style.  Represents the
+Xpercentage of user-available space in use.  Note that values over 100%
+Xare possible
+X(actual number of kbytes used / disk
+Xspace available to non-root users).
+XSee also the \-d option.
+X.TP
+X.B i
+XPrint the total number of file slots (inodes) that can be created on the file
+Xsystem.
+X.TP
+X.B U
+XPrint the number of file slots in use.
+X.TP
+X.B F
+XPrint the number of file slots available.
+X.TP
+X.B P
+XPrint the percentage of file slots in use.
+X.TP
+X.B s
+XPrint the file system name (special device or remote mount point).
+X.TP
+X.B S
+XPrint the file system name (special device or remote mount point),
+Xat full length.
+XThe file system name
+Xis formatted to the maximum width necessary for the longest file system
+Xname.
+X.TP
+X.B t
+XPrint the file system type.
+X.TP
+X.B T
+XPrint the file system type at full length.  The file system type
+Xis formatted to the maximum width necessary for the longest file system
+Xtype.
+X.TP
+X.B I
+XPrint the time the filesystem was mounted.  This column is
+Xnot supported on all systems.
+X.TP
+X.B O
+XPrint the filesystem mount options.
+X.PP
+XThe default format string for \fIdi\fR is \fBsmbuvpT\fR.
+X.PP
+XThe default format string for \fImi\fR is \fBMSTIO\R.
+X.PP
+XThe format string may also contain any other character not listed
+Xabove.  The character will be printed as is.  e.g. \fBdi -f 'mbuvp|iUFP'\fR
+Xwill print the character '|' between the disk usage and the file slot
+Xusage.  The command sequence (Bourne Shell):
+X.RS
+X.br
+X.B di -f 'mbuvp
+X.br
+X.B miUFP'
+X.br
+X.RE
+Xwill print two lines of data for each filesystem.
+X.SH Examples
+XVarious \fIdf\fR
+Xequivalent format strings for System V release 4 are:
+X.PP
+X.RS
+X\fI/usr/bin/df -v\fR     di -dp \-f msbuf1
+X.br
+X\fI/usr/bin/df -k\fR     di -dk \-f sbcvpm
+X.br
+X\fI/usr/ucb/df\fR        di -dk \-f sbuv2m
+X.RE
+X.PP
+XIf you like your numbers to add up/calculate the percentage
+Xcorrectly, try one
+Xof the following format strings:
+X.PP
+X.RS
+X.B di -f SMbuf1T
+X.br
+X.B di -f SMbcvpT
+X.br
+X.B di -f SMBuv2T
+X.RE
+X.SH Note
+XFor filesystems that do not report available blocks (e.g. System V
+Xrelease 3), the number of available blocks is considered to be the
+Xnumber of free blocks.
+X.SH WARNING
+XDo not replace your system's \fIdf\fR command with this program.  You
+Xwill in all likelihood break your installation procedures.
+X.SH See Also
+Xdf(1), fstab(5), getmnt(2), getmntinfo(2), mnttab(4), mount(1M)
+Xstatfs(2), statvfs(2)
+X.SH Author
+XThis program is Copyright 1994-1999 by Brad Lanam.
+X.PP
+XBrad Lanam, Walnut Creek, CA (bll@gentoo.com).
+END_OF_FILE
+if test 7676 -ne `wc -c <'di.1'`; then
+    echo shar: \"'di.1'\" unpacked with wrong size!
+fi
+# end of 'di.1'
+fi
+if test -f 'getopt.c' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'getopt.c'\"
+else
+echo shar: Extracting \"'getopt.c'\" \(1664 characters\)
+sed "s/^X//" >'getopt.c' <<'END_OF_FILE'
+X/*
+X *
+X * $Id$
+X *
+X * getopt - get option letter from argv
+X *
+X * from Cnews by Henry Spencer
+X *
+X */
+X
+X#ifndef lint
+Xstatic char    getopt_c_rcsid [] =
+X"$Id$";
+Xstatic char    getopt_c_source [] =
+X"$Source$";
+X#endif
+X
+X#include <stdio.h>
+X#include <string.h>
+X
+Xchar    *optarg;    /* Global argument pointer. */
+Xint optind = 0; /* Global argv index. */
+X
+Xstatic char *scan = NULL;   /* Private scan pointer. */
+X
+Xint
+Xgetopt(argc, argv, optstring)
+Xint argc;
+Xchar *argv[];
+Xchar *optstring;
+X{
+X    char c;
+X    char *place;
+X
+X
+X    optarg = NULL;
+X
+X    if (scan == NULL || *scan == '\0')
+X    {
+X        if (optind == 0)
+X        {
+X            optind++;
+X        }
+X
+X        if (optind >= argc || argv[optind][0] != '-' ||
+X                argv[optind][1] == '\0')
+X        {
+X            return(EOF);
+X        }
+X
+X        if (strcmp(argv[optind], "--")==0)
+X        {
+X            optind++;
+X            return(EOF);
+X        }
+X
+X        scan = argv[optind]+1;
+X        optind++;
+X    }
+X
+X    c = *scan++;
+X    place = strchr(optstring, c);
+X
+X    if (place == NULL || c == ':')
+X    {
+X        fprintf(stderr, "%s: unknown option -%c\n", argv[0], c);
+X        return('?');
+X    }
+X
+X    place++;
+X    if (*place == ':')
+X    {
+X        if (*scan != '\0')
+X        {
+X            optarg = scan;
+X            scan = NULL;
+X        }
+X        else if (optind < argc)
+X        {
+X            optarg = argv[optind];
+X            optind++;
+X        }
+X        else
+X        {
+X            fprintf(stderr, "%s: -%c argument missing\n", argv[0], c);
+X            return('?');
+X        }
+X    }
+X
+X    return(c);
+X}
+END_OF_FILE
+if test 1664 -ne `wc -c <'getopt.c'`; then
+    echo shar: \"'getopt.c'\" unpacked with wrong size!
+fi
+# end of 'getopt.c'
+fi
+if test ! -d 'hints' ; then
+    echo shar: Creating directory \"'hints'\"
+    mkdir 'hints'
+fi
+if test -f 'hints/aix.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/aix.sh'\"
+else
+echo shar: Extracting \"'hints/aix.sh'\" \(186 characters\)
+sed "s/^X//" >'hints/aix.sh' <<'END_OF_FILE'
+X# $Id$
+Xcase ${osvers} in
+X    3*)		di_prog="diskinfo" ;;
+X    4.[012]*)	di_prog="diskinfo" ;;
+X    *)		di_prog="di"       ;;
+Xesac
+X
+Xnm_opt="-B"
+END_OF_FILE
+if test 186 -ne `wc -c <'hints/aix.sh'`; then
+    echo shar: \"'hints/aix.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/aix.sh'
+fi
+if test -f 'hints/beos.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/beos.sh'\"
+else
+echo shar: Extracting \"'hints/beos.sh'\" \(590 characters\)
+sed "s/^X//" >'hints/beos.sh' <<'END_OF_FILE'
+X# $Id$
+X# unfortunately, nm doesn't find 'fs_info'.
+Xd_statvfs="undef"
+Xd_fs_info="define"
+Xcc="c++"
+Xusenm="define"
+Xccflags="-I/boot/develop/headers/posix -I/boot/develop/headers/be"
+Xincpath="/boot/develop/headers/posix:/boot/develop/headers/be"
+Xcase `uname -m` in
+X    BePC)
+X        libc="/boot/develop/lib/x86/libroot.so"
+X        libpth="/boot/develop/lib/x86"
+X        libs='-lroot -lbe'
+X        ;;
+X    *)
+X        libc="/boot/develop/lib/ppc/libroot.so" #???
+X        libpth="/boot/develop/lib/ppc" #???
+X        libs='-lroot -lbe'
+X        ;;
+Xesac
+END_OF_FILE
+if test 590 -ne `wc -c <'hints/beos.sh'`; then
+    echo shar: \"'hints/beos.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/beos.sh'
+fi
+if test -f 'hints/dec_osf.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/dec_osf.sh'\"
+else
+echo shar: Extracting \"'hints/dec_osf.sh'\" \(75 characters\)
+sed "s/^X//" >'hints/dec_osf.sh' <<'END_OF_FILE'
+X# $Id$
+Xd_statvfs="undef"
+END_OF_FILE
+if test 75 -ne `wc -c <'hints/dec_osf.sh'`; then
+    echo shar: \"'hints/dec_osf.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/dec_osf.sh'
+fi
+if test -f 'hints/dynix.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/dynix.sh'\"
+else
+echo shar: Extracting \"'hints/dynix.sh'\" \(68 characters\)
+sed "s/^X//" >'hints/dynix.sh' <<'END_OF_FILE'
+X# $Id$
+Xlibs='-lseq'
+END_OF_FILE
+if test 68 -ne `wc -c <'hints/dynix.sh'`; then
+    echo shar: \"'hints/dynix.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/dynix.sh'
+fi
+if test -f 'hints/dynixptx.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/dynixptx.sh'\"
+else
+echo shar: Extracting \"'hints/dynixptx.sh'\" \(71 characters\)
+sed "s/^X//" >'hints/dynixptx.sh' <<'END_OF_FILE'
+X# $Id$
+Xlibs='-lseq'
+END_OF_FILE
+if test 71 -ne `wc -c <'hints/dynixptx.sh'`; then
+    echo shar: \"'hints/dynixptx.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/dynixptx.sh'
+fi
+if test -f 'hints/freebsd.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/freebsd.sh'\"
+else
+echo shar: Extracting \"'hints/freebsd.sh'\" \(143 characters\)
+sed "s/^X//" >'hints/freebsd.sh' <<'END_OF_FILE'
+X# $Id$
+Xcase "$osvers" in
+X    1.*)
+X        ;;
+X    *)
+X        i_malloc="undef"
+X        ;;
+Xesac
+END_OF_FILE
+if test 143 -ne `wc -c <'hints/freebsd.sh'`; then
+    echo shar: \"'hints/freebsd.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/freebsd.sh'
+fi
+if test -f 'hints/hpux.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/hpux.sh'\"
+else
+echo shar: Extracting \"'hints/hpux.sh'\" \(405 characters\)
+sed "s/^X//" >'hints/hpux.sh' <<'END_OF_FILE'
+X# $Id$
+Xccflags="$ccflags -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+Xd_setmntent_one_arg='undef'
+X
+Xcase "$cc" in
+X    *gcc*)
+X        ccflags="-Wall $ccflags"
+X        ;;
+X    *)
+X        case "$osvers" in
+X            B.10.*|B.11.*)
+X                ccflags="+DAportable $ccflags"
+X                ;;
+X        esac
+X
+X        ccflags="-Ae $ccflags"
+X        ;;
+Xesac
+END_OF_FILE
+if test 405 -ne `wc -c <'hints/hpux.sh'`; then
+    echo shar: \"'hints/hpux.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/hpux.sh'
+fi
+if test -f 'hints/irix.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/irix.sh'\"
+else
+echo shar: Extracting \"'hints/irix.sh'\" \(190 characters\)
+sed "s/^X//" >'hints/irix.sh' <<'END_OF_FILE'
+X# $Id$
+X
+Xcase "$osvers" in
+X    [45].*)
+X        libs="-lsun"
+X        ;;
+X    *)
+X        d_64bit_statfs_flds="define"
+X        ;;
+Xesac
+X
+Xnm_opt='-p'
+END_OF_FILE
+if test 190 -ne `wc -c <'hints/irix.sh'`; then
+    echo shar: \"'hints/irix.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/irix.sh'
+fi
+if test -f 'hints/linux.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/linux.sh'\"
+else
+echo shar: Extracting \"'hints/linux.sh'\" \(391 characters\)
+sed "s/^X//" >'hints/linux.sh' <<'END_OF_FILE'
+X# $Id$
+Xcase "$osvers" in
+X    1.*)
+X        libc="/lib/libc.so.5.0.9"
+X        d_statfssysv3="undef"
+X        d_statfsbsd="define"
+X        ;;
+X    2.0.*)
+X        libs=" "
+X        ;;
+X    *)
+X	ccflags="$ccflags `/usr/bin/getconf LFS_CFLAGS`"
+X	ldflags="$ldflags `/usr/bin/getconf LFS_LDFLAGS`"
+X	libs="$libs `/usr/bin/getconf LFS_LIBS`"
+X        ;;
+Xesac
+END_OF_FILE
+if test 391 -ne `wc -c <'hints/linux.sh'`; then
+    echo shar: \"'hints/linux.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/linux.sh'
+fi
+if test -f 'hints/openbsd.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/openbsd.sh'\"
+else
+echo shar: Extracting \"'hints/openbsd.sh'\" \(111 characters\)
+sed "s/^X//" >'hints/openbsd.sh' <<'END_OF_FILE'
+X# $Id$
+X# hints/openbsd.sh
+Xi_malloc="undef"
+Xoptimize="-O2 -g"
+END_OF_FILE
+if test 111 -ne `wc -c <'hints/openbsd.sh'`; then
+    echo shar: \"'hints/openbsd.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/openbsd.sh'
+fi
+if test -f 'hints/solaris.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/solaris.sh'\"
+else
+echo shar: Extracting \"'hints/solaris.sh'\" \(1007 characters\)
+sed "s/^X//" >'hints/solaris.sh' <<'END_OF_FILE'
+X# $Id$
+X
+Xcase "$osvers" in
+X    2.[6-9]*)
+X		ccflags="`/usr/bin/getconf LFS_CFLAGS`"
+X		ldflags="`/usr/bin/getconf LFS_LDFLAGS`"
+X		libs="$libs `/usr/bin/getconf LFS_LIBS`"
+X		;;
+X    2.*|1*)	;;
+X    *)
+X		ccflags="`/usr/bin/getconf LFS_CFLAGS`"
+X		ldflags="`/usr/bin/getconf LFS_LDFLAGS`"
+X		libs="$libs `/usr/bin/getconf LFS_LIBS`"
+X		;;
+Xesac
+X
+Xcase "$cc" in
+X    *gcc*)      ccflags="-Wall $ccflags"
+X		;;
+X    *)          ccflags="-Xa -v -fast $ccflags"
+X                ldflags="-fast $ldflags"
+X                optimize=""
+X                case "$osvers" in
+X                    2.[7-9]*)
+X                        if [ -x /usr/bin/isainfo -a \
+X                            `uname -m` = sun4u -a \
+X                            `/usr/bin/isainfo -b` = 64 ]
+X                        then
+X                            ccflags="${ccflags} -xarch=v9"
+X                            ldflags="${ldflags} -xarch=v9"
+X                        fi
+X		        ;;
+X                esac
+X		;;
+Xesac
+X
+END_OF_FILE
+if test 1007 -ne `wc -c <'hints/solaris.sh'`; then
+    echo shar: \"'hints/solaris.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/solaris.sh'
+fi
+if test -f 'hints/unicos.sh' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'hints/unicos.sh'\"
+else
+echo shar: Extracting \"'hints/unicos.sh'\" \(173 characters\)
+sed "s/^X//" >'hints/unicos.sh' <<'END_OF_FILE'
+X# $Id$
+Xcase "$osvers" in
+X    9.*)
+X        ubsize="BSIZE"
+X        ;;
+Xesac
+X
+Xd_getmntinfo="undef"
+Xd_setmntent_one_arg="define"
+END_OF_FILE
+if test 173 -ne `wc -c <'hints/unicos.sh'`; then
+    echo shar: \"'hints/unicos.sh'\" unpacked with wrong size!
+fi
+# end of 'hints/unicos.sh'
+fi
+if test -f 'win95.mak' -a "${1}" != "-c" ; then
+  echo shar: Will not clobber existing file \"'win95.mak'\"
+else
+echo shar: Extracting \"'win95.mak'\" \(1267 characters\)
+sed "s/^X//" >'win95.mak' <<'END_OF_FILE'
+X#
+X#  di makefile for windows95
+X#
+X#  Copyright 1995-1999 Brad Lanam
+X#
+X#  $Id$
+X#  $Source$
+X#
+X
+XCFLAGS =
+XLDFLAGS =
+XLIBS =
+XPROG = di
+XMPROG = mi
+X
+X###
+X
+Xnone:
+X	echo Usage:
+X	echo       nmake -f win95.mak windows
+X	echo    or make -f win95.mak windows-gcc
+X
+X# This was tested using vc++ 5.0.
+Xwindows:
+X	$(MAKE) -f win95.mak CC=cl LD=cl EXE_EXT=".exe" OBJ_EXT=".obj" \
+X		OTHEROBJ="getopt.obj" \
+X		CP="copy " \
+X		CFLAGS="$(CFLAGS) -nologo -O2 \
+X		-DMPROG=\\\"$(MPROG)\\\" \
+X		-DDEFAULT_FORMAT=\\\"sMbuvpT\\\"" \
+X		LDFLAGS="-nologo -O2" $(PROG).exe
+X
+X# This was tested using Cygnus gcc b19
+Xwindows-gcc:
+X	$(MAKE) -f win95.mak CC=gcc LD=gcc EXE_EXT=".exe" OBJ_EXT=".o" \
+X		OTHEROBJ="getopt.o" \
+X		CP="cp -f" \
+X		CFLAGS="$(CFLAGS) -g -O2 \
+X		-DI_LIMITS -DI_UNISTD -DI_SYS_PARAM \
+X		-DMPROG=\\\"$(MPROG)\\\" \
+X		-DDEFAULT_FORMAT=\\\"sMbuvpT\\\"" \
+X		LDFLAGS="-g -O2" $(PROG).exe
+X
+X###
+X
+Xconfig.h:	config.win95
+X	$(CP) config.win95 config.h
+X
+X####################
+X
+X$(PROG)$(EXE_EXT):	di$(OBJ_EXT) $(OTHEROBJ)
+X	$(CC) $(CFLAGS) $(LDFLAGS) -o $(PROG)$(EXE_EXT) di$(OBJ_EXT) \
+X		$(OTHEROBJ) $(LIBS)
+X
+X###
+X
+Xdi$(OBJ_EXT):	di.c config.h
+X	$(CC) -c $(CFLAGS) di.c
+X
+Xgetopt$(OBJ_EXT):	getopt.c
+X	$(CC) -c $(CFLAGS) getopt.c
+END_OF_FILE
+if test 1267 -ne `wc -c <'win95.mak'`; then
+    echo shar: \"'win95.mak'\" unpacked with wrong size!
+fi
+chmod +x 'win95.mak'
+# end of 'win95.mak'
+fi
+echo shar: End of archive 1 \(of 3\).
+cp /dev/null ark1isdone
+MISSING=""
+for I in 1 2 3 ; do
+    if test ! -f ark${I}isdone ; then
+	MISSING="${MISSING} ${I}"
+    fi
+done
+if test "${MISSING}" = "" ; then
+    echo You have unpacked all 3 archives.
+    rm -f ark[1-9]isdone
+else
+    echo You still need to unpack the following archives:
+    echo "        " ${MISSING}
+fi
+##  End of shell archive.
+exit 0
+

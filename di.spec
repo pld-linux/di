@@ -25,16 +25,16 @@ w systemie. Podobnie jak 'df' lecz w bardziej przystêpnej formie.
 %setup -q 
 
 %build
-#cd $RPM_BUILD_DIR/%name-%version
 ./configure --prefix=%{_prefix}
 %{__make} RPM_OPT_FLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-#cd $RPM_BUILD_DIR/%name-%version
-rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
-%{__make} PREFIX=$RPM_BUILD_ROOT%{_prefix} MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1 install
+
+%{__make} install \
+	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
+	MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1
 
 gzip -9nf MANIFEST README
 

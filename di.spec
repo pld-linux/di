@@ -1,7 +1,7 @@
 Summary:	Disk Info
 Summary(pl):	Disk Info
 Name:		di
-Version:	2.3
+Version:	3.9
 Release:	1
 License:	GPL
 Group:		Applications/System

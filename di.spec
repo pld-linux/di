@@ -2,7 +2,7 @@ Summary:	Disk Info
 Summary(pl):	Disk Info
 Name:		di
 Version:	3.10
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.gentoo.com/%{name}/%{name}-%{version}.tar.gz
@@ -43,4 +43,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README MANIFEST
 %attr(755,root,root) %{_bindir}/di
+%attr(755,root,root) %{_bindir}/mi
 %{_mandir}/man1/di.*

@@ -8,6 +8,7 @@ Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
 # Source0-md5:	222a367414030666690e833fc2668be4
 URL:		http://www.gentoo.com/di/
+BuildRequires:	gettext-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description

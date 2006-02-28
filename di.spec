@@ -1,5 +1,5 @@
 Summary:	Disk Info - disk information utility
-Summary(pl):	Disk Info - informacje o dyskach 
+Summary(pl):	Disk Info - informacje o dyskach
 Name:		di
 Version:	4.4
 Release:	1
@@ -42,7 +42,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1
-	
+
 mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{de_DE,de}
 
 %find_lang %{name}

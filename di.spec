@@ -1,12 +1,12 @@
 Summary:	Disk Info - disk information utility
 Summary(pl):	Disk Info - informacje o dyskach
 Name:		di
-Version:	4.5
+Version:	4.6
 Release:	1
 License:	custom (see LICENSE* files)
 Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
-# Source0-md5:	8a7b99f0189453c6a188890c5668f949
+# Source0-md5:	6bc22fb311f893c893aeaf6eac7ffaa4
 URL:		http://www.gentoo.com/di/
 BuildRequires:	gettext-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)

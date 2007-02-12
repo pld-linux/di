@@ -1,5 +1,5 @@
 Summary:	Disk Info - disk information utility
-Summary(pl):	Disk Info - informacje o dyskach
+Summary(pl.UTF-8):   Disk Info - informacje o dyskach
 Name:		di
 Version:	4.9
 Release:	1
@@ -18,13 +18,13 @@ disk usage in whatever format you desire/prefer/are used to.
 
 It is designed to be portable across many platforms.
 
-%description -l pl
-'di' jest narzêdziem udostêpniaj±cym informacje o dyskach istniej±cych
-w systemie - podobnie jak 'df', lecz w bardziej przystêpnej formie. Ma
-mo¿liwo¶æ wy¶wietlania wykorzystania dysku w dowolnie wybranym
+%description -l pl.UTF-8
+'di' jest narzÄ™dziem udostÄ™pniajÄ…cym informacje o dyskach istniejÄ…cych
+w systemie - podobnie jak 'df', lecz w bardziej przystÄ™pnej formie. Ma
+moÅ¼liwoÅ›Ä‡ wyÅ›wietlania wykorzystania dysku w dowolnie wybranym
 formacie.
 
-Jest zaprojektowane w sposób przeno¶ny na wiele platform.
+Jest zaprojektowane w sposÃ³b przenoÅ›ny na wiele platform.
 
 %prep
 %setup -q

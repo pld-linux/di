@@ -1,5 +1,5 @@
 Summary:	Disk Info - disk information utility
-Summary(pl.UTF-8):   Disk Info - informacje o dyskach
+Summary(pl.UTF-8):	Disk Info - informacje o dyskach
 Name:		di
 Version:	4.9
 Release:	1

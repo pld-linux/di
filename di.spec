@@ -1,15 +1,16 @@
 Summary:	Disk Info - disk information utility
 Summary(pl.UTF-8):	Disk Info - informacje o dyskach
 Name:		di
-Version:	4.13
+Version:	4.14
 Release:	1
 License:	custom (see LICENSE* files)
 Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
-# Source0-md5:	7f774bf1d044c28136373fdd06489cb1
+# Source0-md5:	375e6b1d4245ab02a8ca67ae118fbe5f
 Patch0:		%{name}-Makefile.patch
 URL:		http://www.gentoo.com/di/
 BuildRequires:	gettext-devel
+BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -20,17 +21,17 @@ disk usage in whatever format you desire/prefer/are used to.
 It is designed to be portable across many platforms.
 
 %description -l pl.UTF-8
-'di' jest narzędziem udostępniającym informacje o dyskach istniejących
-w systemie - podobnie jak 'df', lecz w bardziej przystępnej formie. Ma
-możliwość wyświetlania wykorzystania dysku w dowolnie wybranym
-formacie.
+'di' jest narzędziem udostępniającym informacje o dyskach
+istniejących w systemie - podobnie jak 'df', lecz w bardziej
+przystępnej formie. Ma możliwość wyświetlania wykorzystania dysku
+w dowolnie wybranym formacie.
 
 Jest zaprojektowane w sposób przenośny na wiele platform.
 
 %prep
 %setup -q
 %patch0 -p1
-sed -e 's@ sed@ /bin/sed@g' -i features/cflags.sh
+%{__sed} -e 's@ sed@ /bin/sed@g' -i features/cflags.sh
 
 %build
 %{__make} \
@@ -59,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT
 %doc README MANIFEST LICENSE*
 %attr(755,root,root) %{_bindir}/di
 %attr(755,root,root) %{_bindir}/mi
-%{_mandir}/man1/di.*
+%{_mandir}/man1/di.1*

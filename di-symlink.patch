@@ -1,0 +1,11 @@
+--- di-4.15/Makefile~	2009-09-18 10:47:18.000000000 +0200
++++ di-4.15/Makefile	2009-09-18 10:49:46.000000000 +0200
+@@ -145,7 +145,7 @@
+ 	-$(TEST) -f $(TARGET) && $(MV) -f $(TARGET) $(TARGET).old
+ 	-$(TEST) -f $(MTARGET) && $(MV) -f $(MTARGET) $(MTARGET).old
+ 	$(CP) -f $(PROG)$(EXE_EXT) $(TARGET)
+-	-$(LN) -s $(TARGET) $(MTARGET)
++	-$(LN) -s /usr/bin/di $(MTARGET)
+ 	-$(RM) -f $(TARGET).old $(MTARGET).old > /dev/null 2>&1
+ 	@-./hasnls$(EXE_EXT) && echo "# NLS enabled"
+ 	@-./hasnls$(EXE_EXT) || echo "# NLS not enabled"

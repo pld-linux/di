@@ -1,0 +1,19 @@
+--- di-4.17/Build~	2009-11-24 12:10:02.794851204 +0000
++++ di-4.17/Build	2009-11-24 12:12:44.568165397 +0000
+@@ -36,7 +36,15 @@
+                     bit64="-64"
+                     shift
+                     ;;
+-                -mkiffe|-mkc)
++                -mkc)
++                    DI_BUILD_MKCONFIG_PL=1
++                    export DI_BUILD_MKCONFIG_PL
++                    shift
++                    ;;
++                -mkiffe)
++                    DI_BUILD_MKCONFIG_PL=0
++                    export DI_BUILD_MKCONFIG_PL
++                    shift
+                     ;;
+                 -nonls|--disable-nls)
+                     DI_BUILD_NO_NLS=1

@@ -1,14 +1,15 @@
 Summary:	Disk Info - disk information utility
 Summary(pl.UTF-8):	Disk Info - informacje o dyskach
 Name:		di
-Version:	4.16
+Version:	4.17
 Release:	1
 License:	custom (see LICENSE* files)
 Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
-# Source0-md5:	a035972d3f90bc8390b19461156ee4ea
+# Source0-md5:	be55b3a1693b318effa3db8d1c0243c1
 Patch0:		%{name}-Makefile.patch
 Patch1:		%{name}-symlink.patch
+Patch2:		%{name}-Build.patch
 URL:		http://www.gentoo.com/di/
 BuildRequires:	gettext-devel
 BuildRequires:	sed >= 4.0
@@ -22,10 +23,10 @@ disk usage in whatever format you desire/prefer/are used to.
 It is designed to be portable across many platforms.
 
 %description -l pl.UTF-8
-'di' jest narzędziem udostępniającym informacje o dyskach
-istniejących w systemie - podobnie jak 'df', lecz w bardziej
-przystępnej formie. Ma możliwość wyświetlania wykorzystania dysku
-w dowolnie wybranym formacie.
+'di' jest narzędziem udostępniającym informacje o dyskach istniejących
+w systemie - podobnie jak 'df', lecz w bardziej przystępnej formie. Ma
+możliwość wyświetlania wykorzystania dysku w dowolnie wybranym
+formacie.
 
 Jest zaprojektowane w sposób przenośny na wiele platform.
 
@@ -33,6 +34,7 @@ Jest zaprojektowane w sposób przenośny na wiele platform.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 %{__sed} -e 's@ sed@ /bin/sed@g' -i features/cflags.sh
 
 %build

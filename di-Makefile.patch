@@ -1,6 +1,6 @@
---- di-4.12/Makefile~	2008-01-21 08:32:54.000000000 +0100
-+++ di-4.12/Makefile	2008-01-21 08:32:44.000000000 +0100
-@@ -70,7 +70,7 @@
+--- di-4.18/Makefile~	2009-11-30 01:50:38.000000000 +0000
++++ di-4.18/Makefile	2009-11-30 15:11:51.460747491 +0000
+@@ -67,7 +67,7 @@
  
  # have to get various environment variables set up.
  all:
@@ -9,7 +9,7 @@
  
  di-all:	config.h $(PROG)$(EXE_EXT) hasnls$(EXE_EXT)
  
-@@ -93,15 +93,14 @@
+@@ -84,15 +84,14 @@
  		CC=cl LD=cl EXE_EXT=".exe" OBJ_EXT=".obj" \
  		CFLAGS="$(CFLAGS) -nologo -O2 \
  		-DDEFAULT_FORMAT=\\\"sMbuvpT\\\"" \
@@ -27,15 +27,16 @@
  
  ####################
  
-@@ -202,14 +201,14 @@
- 		getopt$(OBJ_EXT)
+@@ -191,7 +190,7 @@
+ 		realloc$(OBJ_EXT) trimchar$(OBJ_EXT) getopt$(OBJ_EXT)
  	@test ! -f reqlibs.txt || echo "*** Using libs: `cat reqlibs.txt`"
  	$(CC) -o $(PROG)$(EXE_EXT) \
 -		$(CFLAGS) $(LDFLAGS) \
 +		$(CFLAGS) $(OPTFLAGS) $(LDFLAGS) \
- 		di$(OBJ_EXT) dilib$(OBJ_EXT) \
- 		getopt$(OBJ_EXT) $(LIBS) \
- 		`test ! -f reqlibs.txt || cat reqlibs.txt`
+ 		di$(OBJ_EXT) didiskutil$(OBJ_EXT) digetinfo$(OBJ_EXT) \
+ 		digetentries$(OBJ_EXT) \
+ 		realloc$(OBJ_EXT) trimchar$(OBJ_EXT) \
+@@ -200,7 +199,7 @@
  
  hasnls$(EXE_EXT):	hasnls$(OBJ_EXT)
  	$(CC) -o hasnls$(EXE_EXT) \

@@ -1,12 +1,12 @@
 Summary:	Disk Info - disk information utility
 Summary(pl.UTF-8):	Disk Info - informacje o dyskach
 Name:		di
-Version:	4.18
+Version:	4.19
 Release:	1
 License:	custom (see LICENSE* files)
 Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
-# Source0-md5:	caa2b12aacd33275c79cf8bcec41ca6d
+# Source0-md5:	79ccc2e364d82e58c313da6456429a80
 Patch0:		%{name}-Makefile.patch
 Patch1:		%{name}-symlink.patch
 URL:		http://www.gentoo.com/di/

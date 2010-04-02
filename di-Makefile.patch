@@ -1,42 +1,31 @@
---- di-4.18/Makefile~	2009-11-30 01:50:38.000000000 +0000
-+++ di-4.18/Makefile	2009-11-30 15:11:51.460747491 +0000
-@@ -67,7 +67,7 @@
- 
- # have to get various environment variables set up.
- all:
--	./Build
-+	./Build -mkc
- 
- di-all:	config.h $(PROG)$(EXE_EXT) hasnls$(EXE_EXT)
- 
-@@ -84,15 +84,14 @@
+--- di-4.20/Makefile~	2010-03-31 17:30:14.000000000 +0200
++++ di-4.20/Makefile	2010-04-02 16:24:55.767775880 +0200
+@@ -138,7 +138,7 @@
  		CC=cl LD=cl EXE_EXT=".exe" OBJ_EXT=".obj" \
  		CFLAGS="$(CFLAGS) -nologo -O2 \
  		-DDEFAULT_FORMAT=\\\"sMbuvpT\\\"" \
--		LDFLAGS="-nologo -O2" $(PROG).exe
-+		LDFLAGS="-nologo" $(PROG).exe
+-		LDFLAGS="-nologo -O2" di-programs
++		LDFLAGS="-nologo" di-programs
  
  # This was tested using cygwin
- windows-gcc:	wconfig.h
- 	$(MAKE) -f Makefile \
+ windows-gcc:
+@@ -148,8 +148,7 @@
+ 	$(MAKE) \
  		CC=gcc LD=gcc EXE_EXT=".exe" OBJ_EXT=".o" \
  		CFLAGS="$(CFLAGS) -g -O2 \
 -		-DDEFAULT_FORMAT=\\\"sMbuvpT\\\"" \
--		LDFLAGS="-g -O2" $(PROG).exe
+-		LDFLAGS="-g -O2" di-programs
 +		-DDEFAULT_FORMAT=\\\"sMbuvpT\\\""
  
- ####################
- 
-@@ -191,7 +190,7 @@
- 		realloc$(OBJ_EXT) trimchar$(OBJ_EXT) getopt$(OBJ_EXT)
- 	@test ! -f reqlibs.txt || echo "*** Using libs: `cat reqlibs.txt`"
+ os2-gcc:
+ 	@echo ':' > di.env;chmod a+rx di.env
+@@ -279,12 +278,12 @@
+ 	@if [ -f reqlibs.txt ];then \
+ 		echo "*** Using libs: `$(CAT) reqlibs.txt`"; fi
  	$(CC) -o $(PROG)$(EXE_EXT) \
--		$(CFLAGS) $(LDFLAGS) \
-+		$(CFLAGS) $(OPTFLAGS) $(LDFLAGS) \
- 		di$(OBJ_EXT) didiskutil$(OBJ_EXT) digetinfo$(OBJ_EXT) \
- 		digetentries$(OBJ_EXT) \
- 		realloc$(OBJ_EXT) trimchar$(OBJ_EXT) \
-@@ -200,7 +199,7 @@
+-		$(CFLAGS) $(LDFLAGS) $(OBJECTS) $(LIBS) \
++		$(CFLAGS) $(OPTFLAGS) $(LDFLAGS) $(OBJECTS) $(LIBS) \
+ 		`if [ -f reqlibs.txt ];then $(CAT) reqlibs.txt; fi`
  
  hasnls$(EXE_EXT):	hasnls$(OBJ_EXT)
  	$(CC) -o hasnls$(EXE_EXT) \

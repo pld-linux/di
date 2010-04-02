@@ -1,12 +1,12 @@
 Summary:	Disk Info - disk information utility
 Summary(pl.UTF-8):	Disk Info - informacje o dyskach
 Name:		di
-Version:	4.19
+Version:	4.20
 Release:	1
 License:	custom (see LICENSE* files)
 Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
-# Source0-md5:	79ccc2e364d82e58c313da6456429a80
+# Source0-md5:	c773341c8b26660c84e82c37eb492303
 Patch0:		%{name}-Makefile.patch
 Patch1:		%{name}-symlink.patch
 URL:		http://www.gentoo.com/di/
@@ -33,7 +33,6 @@ Jest zaprojektowane w sposób przenośny na wiele platform.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%{__sed} -e 's@ sed@ /bin/sed@g' -i features/cflags.sh
 
 %build
 %{__make} \
@@ -49,8 +48,6 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	MANDIR=$RPM_BUILD_ROOT%{_mandir}/man1
-
-mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{de_DE,de}
 
 %find_lang %{name}
 

@@ -1,14 +1,12 @@
 Summary:	Disk Info - disk information utility
 Summary(pl.UTF-8):	Disk Info - informacje o dyskach
 Name:		di
-Version:	4.26
+Version:	4.27
 Release:	1
 License:	custom (see LICENSE* files)
 Group:		Applications/System
 Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
-# Source0-md5:	7568e18b1c5c72bfbe3d9ba55c30d1ed
-Patch0:		%{name}-Makefile.patch
-Patch1:		%{name}-symlink.patch
+# Source0-md5:	b1a7ee87b83d72c273558a5ec815bfc3
 URL:		http://www.gentoo.com/di/
 BuildRequires:	gettext-devel
 BuildRequires:	sed >= 4.0
@@ -31,15 +29,11 @@ Jest zaprojektowane w sposób przenośny na wiele platform.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 %build
 %{__make} \
-	prefix=%{_prefix} \
 	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags}" \
-	OPTFLAGS="%{rpmldflags}"
+	CFLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT

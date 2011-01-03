@@ -9,7 +9,6 @@ Source0:	http://www.gentoo.com/di/%{name}-%{version}.tar.gz
 # Source0-md5:	b1a7ee87b83d72c273558a5ec815bfc3
 URL:		http://www.gentoo.com/di/
 BuildRequires:	gettext-devel
-BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
